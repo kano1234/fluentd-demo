@@ -67,3 +67,5 @@ docker run \
     --net $DOCKER_NETWORK \
     --name $CONTAINER_NAME \
     -p 8080:8080 $DOCKER_IMAGE:$IMAGE_TAG
+
+docker exec -it $(docker ps -q -f name=fluentd-app) /bin/bash
