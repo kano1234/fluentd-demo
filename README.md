@@ -10,7 +10,7 @@ $ docker-compose up -d
 $ ./docker-run.sh
 ```
 
-## docker container にアクセス
+## docker container にアクセス（docker-run.shにでログインするように修正しましたので不要となります）
 ```bash
 # container に入る
 $ docker ps
