@@ -18,16 +18,24 @@ import java.util.Map;
 @RequestMapping("api/v1/log")
 public class LogCheckController {
 
-    private static FluentLogger LOGGER = FluentLogger.getLogger("app");
+//    private static FluentLogger LOGGER = FluentLogger.getLogger("app");
 
     @GetMapping("/check")
     public ResponseEntity<String> check() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", "Andy");
-        data.put("age", "21");
-        data.put("country", "America");
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("name", "Andy");
+//        data.put("age", "21");
+//        data.put("country", "America");
+//
+//        LOGGER.log("user", data);
+        log.info("test message");
 
-        LOGGER.log("user", data);
+        try {
+            throw new NullPointerException();
+        } catch (Exception e) {
+            log.error("Test error message", e);
+        }
+
         return new ResponseEntity<>("Hello world", HttpStatus.OK);
     }
 }
