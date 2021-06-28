@@ -32,9 +32,32 @@
         </encoder>
     </appender>
 
+
+    <appender name="stash_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/stash.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logs/trace.log.%i</fileNamePattern>    <!-- %iはインデックス。minIndexからMaxIndexまでの連番 -->
+            <minIndex>1</minIndex>
+            <maxIndex>7</maxIndex>      <!-- 最大7ファイルまで世代管理 -->
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+<!--    <appender name="stash" class="net.logstash.logback.appender.LogstashUdpSocketAppender">-->
+<!--        <host>MyAwesomeSyslogServer</host>-->
+<!--        &lt;!&ndash; port is optional (default value shown) &ndash;&gt;-->
+<!--        <port>24224</port>-->
+<!--        &lt;!&ndash; layout is required &ndash;&gt;-->
+<!--        <layout class="net.logstash.logback.layout.LogstashLayout"/>-->
+<!--    </appender>-->
+
     <!-- rootロガー。ログは原則ファイルAと標準出力に出力する -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="trace_log"/>
+        <appender-ref ref="stash_log"/>
     </root>
 </configuration>
