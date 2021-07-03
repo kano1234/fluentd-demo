@@ -3,38 +3,15 @@
 ## Run
 
 ```bash
-# elasticsearch, kibana を起動
 $ docker-compose up -d
 
-# 現状、docker image から起動しています
-$ ./docker-run.sh
+$ ./gradlew bootRun
 ```
 
-## docker container にアクセス
-```bash
-# container に入る
-$ docker ps
-$ docker exec -it {CONTAINER ID} /bin/bash
-
-# td-agent log
-$ cat /var/log/td-agent/td-agent.log
-
-```
-参考記事：\
-https://docs.fluentd.org/language-bindings/java \
-https://pppurple.hatenablog.com/entry/2018/03/05/034339
-
-## 参考コマンド
-
-```bash
-# docker image (adoptopenjdk/openjdk11:slim)はUbuntu ベースです
-# Ubuntuのバージョン確認
-$ cat /etc/os-release
-
-# vim 入ってないので欲しい場合は入れてください
-$ apt -y install vim
-```
-
+## 参考サイト
+- [type tcp](https://docs.fluentd.org/input/tcp)
+- [logstash-logback-encode](https://github.com/logstash/logstash-logback-encoder)
+- [logback 設定: logback-more-appenders](https://github.com/sndyuk/logback-more-appenders/blob/master/src/test/resources/logback-appenders-fluentd.xml)
 ## Java version
 
 ```text

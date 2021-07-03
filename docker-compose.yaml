@@ -1,13 +1,14 @@
 version: "3.8"
 services:
-#  fluentd:
-#    build: ./fluentd
-#    container_name: fluentd
-#    ports:
-#      - 24224:24224
-#    volumes:
-#      - ./fluentd/config:/fluentd/etc
-#      - ./nginx/log:/var/log/nginx
+  fluentd:
+    build: ./fluentd
+    container_name: fluentd
+    ports:
+      - 24224:24224
+    volumes:
+      - ./fluentd/config:/fluentd/etc
+    networks:
+      - docker-local-network
   elasticsearch:
     image: elasticsearch:7.12.1
     container_name: elasticsearch
@@ -16,25 +17,25 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
       - 9200:9200
-#    networks:
-#      - docker-local-network
+    networks:
+      - docker-local-network
     ulimits:
       memlock:
         soft: -1
         hard: -1
-#    depends_on:
-#      - fluentd
+    depends_on:
+      - fluentd
   kibana:
     image: kibana:7.12.1
     container_name: kibana
     ports:
       - 5601:5601
-#    networks:
-#      - docker-local-network
+    networks:
+      - docker-local-network
     depends_on:
       - elasticsearch
 
 networks:
-  default:
-    external:
-      name: docker-local-network
+  docker-local-network:
+    name: docker-local-network
+    driver: bridge
