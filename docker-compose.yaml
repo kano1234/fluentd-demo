@@ -1,5 +1,15 @@
 version: "3.8"
 services:
+#  app:
+#    build: ./
+#    container_name: spring-app-first
+#    ports:
+#      - 8080:8080
+#    environment:
+#      - JAR_TARGET=${JAR_TARGET}
+#      - STAGE=${STAGE}
+#    networks:
+#      - docker-local-network
   fluentd:
     build: ./fluentd
     container_name: fluentd
@@ -36,6 +46,8 @@ services:
       - elasticsearch
 
 networks:
+  default:
+    name: bridge
   docker-local-network:
     name: docker-local-network
     driver: bridge

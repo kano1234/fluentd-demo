@@ -1,19 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-25thread] [%X{X-REQUEST-ID}] - %msg%n</pattern>
-        </encoder>
-    </appender>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
 
-    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <appender name="FLUENTD" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>localhost:24224</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="stash"/>
+        <appender-ref ref="FLUENTD"/>
     </root>
+
 </configuration>
