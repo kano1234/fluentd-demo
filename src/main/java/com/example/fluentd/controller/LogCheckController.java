@@ -1,11 +1,13 @@
 package com.example.fluentd.controller;
 
+import com.example.fluentd.service.LogCheckService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/log")
 public class LogCheckController {
 
+    private final LogCheckService logCheckService;
+
     @GetMapping("/check")
-    public ResponseEntity<String> check() {
+    public ResponseEntity<String> logCheck(@RequestParam("id") int id) {
         log.info("test message");
 
         try {
@@ -24,6 +28,7 @@ public class LogCheckController {
             log.error("Test error message", e);
         }
 
-        return new ResponseEntity<>("Hello world", HttpStatus.OK);
+
+        return new ResponseEntity<>(logCheckService.findById(id), HttpStatus.OK);
     }
 }
