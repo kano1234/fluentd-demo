@@ -26,11 +26,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: echo github ref and sha
-        run: |
-          echo ${{ github.ref }}
-          echo ${{ github.sha }}
-
       - name: Setup java
         uses: actions/setup-java@v2
         with:
@@ -56,7 +51,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: fluentd-demo
-        run: echo ${ECR_REGISTRY}
+        run: echo ${{ github.sha }} | head -c 8
 
       - name: Gradle build
         run: ./gradlew build
