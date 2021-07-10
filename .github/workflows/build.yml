@@ -25,6 +25,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: echo github ref and sha
         run: |
           echo ${{ github.ref }}
           echo ${{ github.sha }}
