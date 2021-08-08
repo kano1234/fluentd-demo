@@ -17,10 +17,15 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-      - name: Gradle verification
+      - name: Verification
         run: ./gradlew check
-      - name: Gradle build
+      - name: Build
         run: ./gradlew build -x test
+      - name: Archive artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: jar
+            path: build/libs/$JAR_TARGET
 
 #  build:
 #    runs-on: ubuntu-latest
