@@ -3,7 +3,7 @@ name: Build, tag, and push image to Amazon ECR
 on:
   push:
     branches:
-      - feature_logstash_tcp_log4j2
+      - feature_actions
   workflow_dispatch:
 
 jobs:
