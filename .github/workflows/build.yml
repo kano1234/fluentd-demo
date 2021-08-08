@@ -22,10 +22,10 @@ jobs:
       - name: Build
         run: ./gradlew build -x test
       - name: Archive artifacts
-          uses: actions/upload-artifact@v2
-          with:
-            name: jar
-            path: build/libs/$JAR_TARGET
+        uses: actions/upload-artifact@v2
+        with:
+          name: jar
+          path: build/libs/$JAR_TARGET
 
 #  build:
 #    runs-on: ubuntu-latest
