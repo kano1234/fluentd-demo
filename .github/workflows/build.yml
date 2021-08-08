@@ -21,6 +21,10 @@ jobs:
         run: ./gradlew check
       - name: Build
         run: ./gradlew build -x test
+      - name: echo env
+        run: |
+          echo ${{ env.JAR_TARGET }}
+          echo $JAR_TARGET
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
