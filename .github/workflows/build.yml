@@ -9,6 +9,8 @@ on:
 jobs:
   verification-and-build:
     runs-on: ubuntu-latest
+    env:
+      ECR_REPOSITORY: fluentd-demo
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,54 +23,33 @@ jobs:
         run: ./gradlew check
       - name: Build
         run: ./gradlew build -x test
-      - name: echo env
-        run: |
-          echo ${{ env.JAR_TARGET }}
-          echo $JAR_TARGET
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          name: jar
-          path: build/libs/$JAR_TARGET
-
-#  build:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#      - name: Setup java
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: 'adopt'
-#          java-version: '11'
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          role-skip-session-tagging: true
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ap-northeast-1
-#          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-#          role-duration-seconds: 1200
-#          role-session-name: actionsSession
-#      - name: Login to Amazon ECR
-#        id: login-ecr
-#        uses: aws-actions/amazon-ecr-login@v1
-#      - name: Gradle build
-#        run: ./gradlew build -x test
-#      - name: Build and tag docker images
-#        env:
-#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#          ECR_REPOSITORY: fluentd-demo
-#        run: |
-#          IMAGE_TAG=$(echo ${{ github.sha }} | head -c 8)
-#          docker build -t ${ECR_REPOSITORY}:${IMAGE_TAG} .
+          role-skip-session-tagging: true
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1200
+          role-session-name: actionsSession
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: set image tag
+        id: image-tag-gen
+        run: |
+          TAG=$(echo ${{ github.sha }} | head -c 8)
+          echo "::set-output name=image_tag::$TAG"
+      - name: Build and tag docker images
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t ${ECR_REPOSITORY}:${{ step.image-tag-gen.outputs.image_tag }}} .
+#      - name: push image to Amazon ECR
 #          docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
 #          docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
-#          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+#      - name: push image to Amazon ECR
+#        run: |
+#          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:$image_tag
 #          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
-##      - name: push image to Amazon ECR
-##        run: |
-##          echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_ENV}
-##          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${{ env.image_tag }}
-##          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
