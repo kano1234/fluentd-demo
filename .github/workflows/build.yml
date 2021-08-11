@@ -10,7 +10,7 @@ jobs:
   verification-and-build:
     runs-on: ubuntu-latest
     env:
-      ecr_repository: fluentd-demo
+      ECR_REPOSITORY: fluentd-demo
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,19 +36,13 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Setting environment variables
+      - name: Set environment variables
         run: |
-          echo "image_tag=$(echo ${{ github.sha }} | head -c 8)" >> $GITHUB_ENV
-          echo "ecr_registry=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
-      - name: Building Docker images
-#        env:
-#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          echo "IMAGE_TAG=$(echo ${{ github.sha }} | head -c 8)" >> $GITHUB_ENV
+          echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY" >> $GITHUB_ENV
+      - name: Build Docker images
         run: |
-          docker build -t ${ecr_registry}/${ecr_repository}:${image_tag} -t ${ecr_registry}/${ecr_repository}:latest .
-#      - name: push image to Amazon ECR
-#          docker tag ${ecr_repository}:${IMAGE_TAG} ${ECR_REGISTRY}/${ecr_repository}:${IMAGE_TAG}
-#          docker tag ${ecr_repository}:${IMAGE_TAG} ${ECR_REGISTRY}/${ecr_repository}:latest
-#      - name: push image to Amazon ECR
-#        run: |
-#          docker push ${ecr_registry}/${ecr_repository}:$image_tag
-#          docker push ${ecr_registry}/${ecr_repository}:latest
+          docker build -t $ECR_REGISTRY:$IMAGE_TAG -t $ECR_REGISTRY:latest .
+      - name: Push image to Amazon ECR
+        run: |
+          docker push --all-tags $ECR_REGISTRY
