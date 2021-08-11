@@ -39,9 +39,9 @@ jobs:
       - name: set image tag
         id: image-tag-gen
         run: |
-               IMAGE_TAG=$(echo ${{ github.sha }} | head -c 8)
+          IMAGE_TAG=$(echo ${{ github.sha }} | head -c 8)
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_ENV
 #          echo "::set-output name=image_tag::$IMAGE_TAG"
-          echo "image_tag=${IMAGE_TAG}" >> ${GITHUB_ENV}
       - name: Build and tag docker images
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
